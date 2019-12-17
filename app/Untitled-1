@@ -1,0 +1,142 @@
+[
+  {
+    "collection": "provedor",
+    "count": 8,
+    "content": {
+      "nome": {
+        "type": "string"
+      },
+      "maquinas": {
+        "type": "array",
+        "size": 4,
+        "arrayContent": {
+          "nome_maquina": {
+            "type": "string"
+          },
+          "qtd_vcpu": {
+            "type": "int",
+            "minInt": 2,
+            "maxInt": 8
+          },
+          "qtd_ram": {
+            "type": "int",
+            "minInt": 1,
+            "maxInt": 16
+          },
+          "qtd_disco": {
+            "type": "int",
+            "minInt": 64,
+            "maxInt": 256
+          },
+          "preco": {
+            "type": "double",
+            "minDouble": 20,
+            "maxDouble": 50
+          }
+        }
+      }
+    }
+  }
+]
+
+
+db.provedor.insert([
+    {nome: "A",
+    maquina: [
+        {
+            qtd_vcpu: 4,
+            qtd_ram: 16,
+            qtd_disco: 128,
+            preco: 44,
+            em_uso: '0000-00-00'
+        },
+        {
+            qtd_vcpu: 8,
+            qtd_ram: 32,
+            qtd_disco: 256,
+            preco: 80,
+            em_uso: '0000-00-00'
+        },
+        {
+            qtd_vcpu: 16,
+            qtd_ram: 32,
+            qtd_disco: 512,
+            preco: 149,
+            em_uso: '0000-00-00'
+        }
+    ]},
+    {nome: "B",
+    maquina: [
+        {
+            qtd_vcpu: 1,
+            qtd_ram: 2,
+            qtd_disco: 32,
+            preco: 12,
+            em_uso: '0000-00-00'
+        },
+        {
+            qtd_vcpu: 2,
+            qtd_ram: 4,
+            qtd_disco: 64,
+            preco: 25,
+            em_uso: '0000-00-00'
+        },
+        {
+            qtd_vcpu: 4,
+            qtd_ram: 8,
+            qtd_disco: 128,
+            preco: 60,
+            em_uso: '0000-00-00'
+        }
+    ]},
+    {nome: "C",
+    maquina: [
+        {
+            qtd_vcpu: 2,
+            qtd_ram: 8,
+            qtd_disco: 64,
+            preco: 20,
+            em_uso: '0000-00-00'
+        },
+        {
+            qtd_vcpu: 4,
+            qtd_ram: 8,
+            qtd_disco: 128,
+            preco: 30,
+            em_uso: '0000-00-00'
+        },
+        {
+            qtd_vcpu: 8,
+            qtd_ram: 16,
+            qtd_disco: 256,
+            preco: 49,
+            em_uso: '0000-00-00'
+        }
+    ]},
+    {nome: "D",
+    maquina: [
+        {
+            qtd_vcpu: 4,
+            qtd_ram: 8,
+            qtd_disco: 64,
+            preco: 29,
+            em_uso: '0000-00-00'
+        },
+        {
+            qtd_vcpu: 8,
+            qtd_ram: 8,
+            qtd_disco: 256,
+            preco: 49,
+            em_uso: '0000-00-00'
+        },
+        {
+            qtd_vcpu: 16,
+            qtd_ram: 16,
+            qtd_disco: 512,
+            preco: 69,
+            em_uso: '0000-00-00'
+        }
+    ]}
+])
+
+db.provedor.deleteMany({})
