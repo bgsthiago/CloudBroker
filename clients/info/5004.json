@@ -1,0 +1,31 @@
+{
+  "maquinas": [
+    {
+      "nome": "5004",
+      "id": 0,
+      "qtd_vcpu": 2,
+      "qtd_ram": 2,
+      "qtd_disco": 32,
+      "preco": 15,
+      "em_uso": false
+    },
+    {
+      "nome": "5004",
+      "id": 1,
+      "qtd_vcpu": 8,
+      "qtd_ram": 32,
+      "qtd_disco": 256,
+      "preco": 80,
+      "em_uso": false
+    },
+    {
+      "nome": "5004",
+      "id": 2,
+      "qtd_vcpu": 16,
+      "qtd_ram": 32,
+      "qtd_disco": 512,
+      "preco": 149,
+      "em_uso": false
+    }
+  ]
+}

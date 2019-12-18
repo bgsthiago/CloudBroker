@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, render_template, redirect
 import json
 import threading
 import sys
+import time
 import requests
 
 provedor = Flask(__name__)
@@ -12,27 +13,48 @@ url = "http://localhost:5000/{route}"
 
 
 def divulga():
+
     with open(f'info/{port}.json', 'r') as req:
         r = requests.post(url.format(route='divulgar'), data=req)
         return r.json(), r.status_code
 
 
-def receiver():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind(('', port))
+@provedor.route('/usar', methods=['POST'])
+def usar():
 
-    while True:
-        data, source = s.recvfrom(1500)
-        data = data.decode('utf-8')
-        message = json.loads(data)
+    data = ''
+    with open(f'info/{port}.json', 'r+') as req:
+        data = json.load(req)
 
-        t = threading.Thread(target=handle_message,
-                             args=(message, my_id))
-        t.start()
+    received_data = request.json
+    data['maquinas'][received_data['id']]['em_uso'] = True
+    # req['maquina'][received_data['id']]['em_uso'] = True
+    with open(f'info/{port}.json', 'w+') as req:
+        json.dump(data, req, indent=2)
+        # salva arquivo
+        print(received_data)
+    divulga()
+    return jsonify({'Mensagem': 'faça bom proveito, mtf!'})
 
 
-t = threading.Thread(target=receiver, args=())
-t.start()
+@provedor.route('/liberar', methods=['POST'])
+def liberar():
+
+    data = ''
+    with open(f'info/{port}.json', 'r+') as req:
+        data = json.load(req)
+
+    received_data = request.json
+    data['maquinas'][received_data['id']]['em_uso'] = False
+    # req['maquina'][received_data['id']]['em_uso'] = True
+    with open(f'info/{port}.json', 'w+') as req:
+        json.dump(data, req, indent=2)
+        # salva arquivo
+        print(received_data)
+    divulga()
+    return jsonify({'Mensagem': 'ta liberado!!!'})
+
 
 if __name__ == "__main__":
-    provedor.run(host='localhost', debug=True, port=5001)
+    # divulga()
+    provedor.run(host='localhost', debug=True, port=port)

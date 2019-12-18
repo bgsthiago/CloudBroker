@@ -1,15 +1,16 @@
 {
-  "nome": "20000",
-  "maquina": [
+  "maquinas": [
     {
+      "nome": "5003",
       "id": 0,
-      "qtd_vcpu": 4,
+      "qtd_vcpu": 8,
       "qtd_ram": 16,
       "qtd_disco": 128,
       "preco": 44,
       "em_uso": false
     },
     {
+      "nome": "5003",
       "id": 1,
       "qtd_vcpu": 8,
       "qtd_ram": 32,
@@ -18,6 +19,7 @@
       "em_uso": false
     },
     {
+      "nome": "5003",
       "id": 2,
       "qtd_vcpu": 16,
       "qtd_ram": 32,

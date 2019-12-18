@@ -26,6 +26,13 @@ claudio = mongo.db.cloudbroker
 def hello_stranger():
     return jsonify({'Hey, you': ''.join('You\'re finally awake.')})
 
+
+@app.route('/lista')
+def lista():
+    for x in claudio.find():
+        print(x)
+    return 'String'
+
 # provedor
 @app.route('/divulgar', methods=['POST'])
 def acesso_provedor():
@@ -38,8 +45,13 @@ def acesso_provedor():
     #        'preco': received_data['maquina']['preco'],
     #        'em_uso': received_data['maquina']['em_uso']}
     try:
-        claudio.update({'nome':received_data['nome']}, received_data, upsert = True)
-    except:
+        for each in received_data['maquinas']:
+
+            claudio.update(
+                {'nome': each['nome'], 'id': each['id']}, each, upsert=True)
+
+    except Exception as e:
+        print(e)
         return jsonify({'Message': 'Error.'}), 400
 
     # print('CADASTRADO COM SUCESSO:\nvCPUS : ', vCPU, '\nRAM :',
@@ -52,51 +64,25 @@ def acesso_provedor():
 
 @app.route('/encontrar', methods=['POST'])
 def busca():
-    received_data = json.load(request.files['datas'])
-    vCPU = received_data['vCPU']
-    RAM = received_data['RAM']
-    HD = received_data['HD']
-    a = mongo.db.test1.find({"$and": [{'vCPU': {"$gte": vCPU}}, {'RAM': {"$gte": RAM}}, {
-                            'HD': {"$gte": HD}}, {'Disp': 1}]}).sort('RS').limit(1)
+    received_data = loads(request.data.decode('utf-8'))
+    vcpu = received_data['qtd_vcpu']
+    mem = received_data['qtd_ram']
+    disco = received_data['qtd_disco']
+
+    a = claudio.find({"$and": [{'qtd_vcpu': {"$gte": vcpu}}, {'qtd_ram': {"$gte": mem}},
+                               {'qtd_disco': {"$gte": disco}}, {'em_uso': False}]}).sort('preco').limit(1)
+    print(type(a))
     try:
         print('Foi Achado essa VM:\n')
         print(a[0])
-        msg = 'Foi Achado um com as seguintes configuraçoes:\nvCPUS : ', str(a[0]['vCPU']), '\nRAM :', str(a[0]['RAM']), '  GB\nHD :', str(
-            a[0]['HD']), '  GB\nPREÇO R$ ', str(a[0]['RS']), '\nLink de Acesso: 127.0.0.1:', str(a[0]['Prov']), '\nMaquina : ', str(a[0]['Maq'])
-        resposta = {'Mensagem': ''.join(msg)}
+        # msg = 'Foi Achado um com as seguintes configuraçoes:\nvCPUS : ', str(a[0]['vCPU']), '\nRAM :', str(a[0]['RAM']), '  GB\nHD :', str(
+        #   a[0]['HD']), '  GB\nPREÇO R$ ', str(a[0]['preco']), '\nLink de Acesso: 127.0.0.1:', str(a[0]['nome']), '\nMaquina : ', str(a[0]['id'])
+        resposta = {'provedor': a[0]['nome'], 'maquina': a[0]['id'], 'preco': a[0]['preco'],
+                    'qtd_vcpu': a[0]['qtd_vcpu'], 'qtd_ram': a[0]['qtd_ram'], 'qtd_disco': a[0]['qtd_disco']}
     except:
-        msg = 'Nenhum Recurso com essas especificações foi encontrado'
-        print(msg)
-        resposta = {'Mensagem': ''.join(msg)}
+        print('Nenhum Recurso com essas especificações foi encontrado')
+        return jsonify({'Message': 'Error. Nao foi encontrado'}), 400
     return jsonify(resposta)
-
-
-@app.route('/utilizar', methods=['POST'])
-def cliente_usa():
-    received_data = json.load(request.files['datas'])
-    try:
-        a = mongo.db.test1.update(
-            {'Prov': received_data['Prov'], 'Maq': received_data['Maq']}, {'$set': {'Disp': 0}})
-        print('Um registro alterado')
-        msg = 'Sucesso'
-    except:
-        print('Erro, maquina inexistente')
-        msg = 'Erro'
-    return jsonify({'Mensagem': msg})
-
-
-@app.route('/liberar', methods=['POST'])
-def cliente_liberando():
-    received_data = json.load(request.files['datas'])
-    try:
-        a = mongo.db.test1.update(
-            {'Prov': received_data['Prov'], 'Maq': received_data['Maq']}, {'$set': {'Disp': 1}})
-        print('Um registro alterado')
-        msg = 'Sucesso'
-    except:
-        print('Erro, maquina inexistente')
-        msg = 'Erro'
-    return jsonify({'Mensagem': msg})
 
 
 if __name__ == "__main__":
