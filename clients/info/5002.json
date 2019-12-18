@@ -3,28 +3,28 @@
     {
       "nome": "5002",
       "id": 0,
-      "qtd_vcpu": 8,
-      "qtd_ram": 16,
-      "qtd_disco": 128,
-      "preco": 44,
+      "qtd_vcpu": 4,
+      "qtd_ram": 4,
+      "qtd_disco": 16,
+      "preco": 9,
       "em_uso": false
     },
     {
       "nome": "5002",
       "id": 1,
-      "qtd_vcpu": 8,
-      "qtd_ram": 32,
-      "qtd_disco": 256,
-      "preco": 80,
+      "qtd_vcpu": 128,
+      "qtd_ram": 128,
+      "qtd_disco": 128,
+      "preco": 128,
       "em_uso": false
     },
     {
       "nome": "5002",
       "id": 2,
-      "qtd_vcpu": 16,
-      "qtd_ram": 32,
-      "qtd_disco": 512,
-      "preco": 149,
+      "qtd_vcpu": 256,
+      "qtd_ram": 256,
+      "qtd_disco": 256,
+      "preco": 256,
       "em_uso": false
     }
   ]

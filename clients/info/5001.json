@@ -3,10 +3,10 @@
     {
       "nome": "5001",
       "id": 0,
-      "qtd_vcpu": 4,
-      "qtd_ram": 8,
-      "qtd_disco": 16,
-      "preco": 44,
+      "qtd_vcpu": 1,
+      "qtd_ram": 2,
+      "qtd_disco": 32,
+      "preco": 35,
       "em_uso": false
     },
     {

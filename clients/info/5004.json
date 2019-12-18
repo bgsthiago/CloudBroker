@@ -12,19 +12,19 @@
     {
       "nome": "5004",
       "id": 1,
-      "qtd_vcpu": 8,
-      "qtd_ram": 32,
-      "qtd_disco": 256,
-      "preco": 80,
+      "qtd_vcpu": 1,
+      "qtd_ram": 8,
+      "qtd_disco": 128,
+      "preco": 79,
       "em_uso": false
     },
     {
       "nome": "5004",
       "id": 2,
       "qtd_vcpu": 16,
-      "qtd_ram": 32,
-      "qtd_disco": 512,
-      "preco": 149,
+      "qtd_ram": 64,
+      "qtd_disco": 2048,
+      "preco": 399,
       "em_uso": false
     }
   ]
