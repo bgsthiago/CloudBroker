@@ -1,5 +1,6 @@
 import json
 import requests
+import io
 
 url = "https://cloudbroker2019.herokuapp.com/{route}"
 # url = "http://localhost:5000/{route}"
@@ -7,14 +8,22 @@ url_provedor = "http://localhost:{provedor}/{route}"
 maquinas_em_uso = []
 
 def procura():
-    vcpu = input('Insira uma quantidade mínima de vCPU que deseja: ')
-    ram = input('Insira uma quantidade mínima de RAM que deseja: ')
-    disco = input('Insira uma quantidade mínima de disco que deseja: ')
+    vcpu = int(input('Insira uma quantidade mínima de vCPU que deseja: '))
+    ram = int(input('Insira uma quantidade mínima de RAM que deseja: '))
+    disco = int(input('Insira uma quantidade mínima de disco que deseja: '))
 
-    with open('req.json', 'r') as req:
-        r = requests.post(url.format(route='encontrar'), data=req)
+    r = None
+    maquina = {
+        "qtd_vcpu": vcpu,
+        "qtd_ram": ram,
+        "qtd_disco": disco
+    }
 
-    if r.status_code == 201:
+    print(maquina)
+
+    r = requests.post(url.format(route='encontrar'), data=io.StringIO(json.dumps(maquina)))
+
+    if r.status_code == 200:
         maquina = r.json()
         vcpu = maquina['qtd_vcpu']
         ram = maquina['qtd_ram']
@@ -28,11 +37,13 @@ def procura():
         print(f"vCPU's: {vcpu}")
         print(f'RAM: {ram}')
         print(f'disco: {disco}')
-        print(f'preco: {preco}')
+        print(f'preco: R$ {preco}')
+    else:
+        print('Nenhuma máquina foi encontrada')
 
 
 def usa():
-    provedor = ('Qual o provedor responsável pela máquina que deseja utilizar?\n> ')
+    provedor = input('Qual o provedor responsável pela máquina que deseja utilizar?\n> ')
     id = input('Qual ID dá maquina que deseja utilizar?\n> ')
 
     r = requests.post(url_provedor.format(
@@ -44,7 +55,7 @@ def usa():
 
 
 def libera():
-    provedor = ('Qual o provedor responsável pela máquina que deseja liberar?\n> ')
+    provedor = input('Qual o provedor responsável pela máquina que deseja liberar?\n> ')
     id = input('Qual ID dá maquina que deseja liberar?\n> ')
 
     r = requests.post(url_provedor.format(
