@@ -1,9 +1,8 @@
 import json
 import requests
 
-provedor = Flask(__name__)
-# url = "https://cloudbroker2019.herokuapp.com/{route}"
-url = "http://localhost:5000/{route}"
+url = "https://cloudbroker2019.herokuapp.com/{route}"
+# url = "http://localhost:5000/{route}"
 url_provedor = "http://localhost:{provedor}/{route}"
 maquinas_em_uso = []
 
@@ -51,7 +50,7 @@ def libera():
     r = requests.post(url_provedor.format(
         provedor=provedor, route='liberar'), json={"id": id})
 
-    maquinas_em_uso = list(filter(lambda x: x[0] not provedor and x[1] not id))
+    maquinas_em_uso = list(filter(lambda x: x[0] != provedor and x[1] != id))
 
     print(f'A máquina com Provedor: {provedor} e ID: {id} foi liberada com sucesso.\n')
 
