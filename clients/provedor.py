@@ -8,8 +8,8 @@ import requests
 
 provedor = Flask(__name__)
 port = int(sys.argv[1])
-# url = "https://cloudbroker2019.herokuapp.com/{route}"
-url = "http://localhost:5000/{route}"
+url = "https://cloudbroker2019.herokuapp.com/{route}"
+# url = "http://localhost:5000/{route}"
 
 
 def divulga():
@@ -40,7 +40,7 @@ def usar():
         divulga()
         return jsonify({'mensagem': 'Máquina alocada com sucesso.'})
     else:
-        return jsonify({'mensagem': 'Máquina já está em uso, por favor utilize outra máquina.'}), 409
+        return jsonify({'mensagem': 'Máquina já está em uso, por favor selecione outra máquina.'}), 409
 
 
 @provedor.route('/liberar', methods=['POST'])

@@ -3,8 +3,8 @@ import requests
 import io
 import sys
 
-# url = "https://cloudbroker2019.herokuapp.com/{route}"
-url = "http://localhost:5000/{route}"
+url = "https://cloudbroker2019.herokuapp.com/{route}"
+# url = "http://localhost:5000/{route}"
 url_provedor = "http://localhost:{provedor}/{route}"
 maquinas_em_uso = []
 
@@ -20,7 +20,7 @@ def procura():
         "qtd_disco": disco
     }
 
-    print(maquina)
+    # print(maquina)
 
     r = requests.post(url.format(route='encontrar'), data=io.StringIO(json.dumps(maquina)))
 
@@ -47,14 +47,17 @@ def usa():
     provedor = input('Qual o provedor responsável pela máquina que deseja utilizar?\n> ')
     id = input('Qual ID dá maquina que deseja utilizar?\n> ')
 
-    r = requests.post(url_provedor.format(
-        provedor=provedor, route='usar'), json={"id": id})
+    try:
+        r = requests.post(url_provedor.format(
+            provedor=provedor, route='usar'), json={"id": id})
 
-    if r.status_code == 200:
-        maquinas_em_uso.append((provedor, id))
-        print(f'A máquina com Provedor: {provedor} e ID: {id} está pronta para uso.\n')
-    else:
-        print(r.json()['mensagem'])
+        if r.status_code == 200:
+            maquinas_em_uso.append((provedor, id))
+            print(f'A máquina com Provedor: {provedor} e ID: {id} está pronta para uso.\n')
+        else:
+            print(r.json()['mensagem'])
+    except:
+        print('Provedor está offline no momento.')
 
 
 def libera():
@@ -63,14 +66,18 @@ def libera():
     provedor = input('Qual o provedor responsável pela máquina que deseja liberar?\n> ')
     id = input('Qual ID dá maquina que deseja liberar?\n> ')
 
-    r = requests.post(url_provedor.format(
-        provedor=provedor, route='liberar'), json={"id": id})
+    try:
+        r = requests.post(url_provedor.format(
+            provedor=provedor, route='liberar'), json={"id": id})
 
-    if r.status_code == 200:
-        maquinas_em_uso = list(filter(lambda x: x[0] != provedor or x[1] != id, maquinas_em_uso))
-        print(f'A máquina com Provedor: {provedor} e ID: {id} foi liberada com sucesso.\n')
-    else:
-        print(r.json()['mensagem'])
+        if r.status_code == 200:
+            maquinas_em_uso = list(filter(lambda x: x[0] != provedor or x[1] != id, maquinas_em_uso))
+            print(f'A máquina com Provedor: {provedor} e ID: {id} foi liberada com sucesso.\n')
+        else:
+            print(r.json()['mensagem'])
+    except:
+        print('Provedor está offline no momento.')
+        return
 
 
 def listar():
