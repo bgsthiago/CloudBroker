@@ -27,14 +27,20 @@ def usar():
         data = json.load(req)
 
     received_data = request.json
-    data['maquinas'][received_data['id']]['em_uso'] = True
-    # req['maquina'][received_data['id']]['em_uso'] = True
-    with open(f'info/{port}.json', 'w+') as req:
-        json.dump(data, req, indent=2)
-        # salva arquivo
-        print(received_data)
-    divulga()
-    return jsonify({'Mensagem': 'faça bom proveito, mtf!'})
+    id = int(received_data['id'])
+    em_uso = data['maquinas'][id]['em_uso']
+
+    if em_uso == False:
+        data['maquinas'][id]['em_uso'] = True
+        # req['maquina'][received_data['id']]['em_uso'] = True
+        with open(f'info/{port}.json', 'w+') as req:
+            json.dump(data, req, indent=2)
+            # salva arquivo
+            print(received_data)
+        divulga()
+        return jsonify({'mensagem': 'Máquina alocada com sucesso.'})
+    else:
+        return jsonify({'mensagem': 'Máquina já está em uso, por favor utilize outra máquina.'}), 409
 
 
 @provedor.route('/liberar', methods=['POST'])
@@ -45,14 +51,20 @@ def liberar():
         data = json.load(req)
 
     received_data = request.json
-    data['maquinas'][received_data['id']]['em_uso'] = False
-    # req['maquina'][received_data['id']]['em_uso'] = True
-    with open(f'info/{port}.json', 'w+') as req:
-        json.dump(data, req, indent=2)
-        # salva arquivo
-        print(received_data)
-    divulga()
-    return jsonify({'Mensagem': 'ta liberado!!!'})
+    id = int(received_data['id'])
+    em_uso = data['maquinas'][id]['em_uso']
+
+    if em_uso == True:
+        data['maquinas'][id]['em_uso'] = False
+        # req['maquina'][received_data['id']]['em_uso'] = True
+        with open(f'info/{port}.json', 'w+') as req:
+            json.dump(data, req, indent=2)
+            # salva arquivo
+            print(received_data)
+        divulga()
+        return jsonify({'mensagem': 'Máquina liberada com sucesso.'})
+    else:
+        return jsonify({'mensagem': 'Máquina não está em uso no momento.'}), 409        
 
 
 if __name__ == "__main__":
