@@ -8,6 +8,7 @@ url = "https://cloudbroker2019.herokuapp.com/{route}"
 url_provedor = "http://localhost:{provedor}/{route}"
 maquinas_em_uso = []
 
+
 def procura():
     vcpu = int(input('Insira uma quantidade mínima de vCPU que deseja: '))
     ram = int(input('Insira uma quantidade mínima de RAM que deseja: '))
@@ -22,7 +23,8 @@ def procura():
 
     # print(maquina)
 
-    r = requests.post(url.format(route='encontrar'), data=io.StringIO(json.dumps(maquina)))
+    r = requests.post(url.format(route='encontrar'),
+                      data=io.StringIO(json.dumps(maquina)))
 
     if r.status_code == 200:
         maquina = r.json()
@@ -32,28 +34,32 @@ def procura():
         preco = maquina['preco']
         provedor = maquina['provedor']
         id = maquina['maquina']
-
+        acesso = maquina['acesso']
         print('Encontramos uma máquina com as seguintes especificações:')
         print(f'Provedor: {provedor} - ID {id}')
         print(f"vCPU's: {vcpu}")
         print(f'RAM: {ram}')
         print(f'disco: {disco}')
         print(f'preco: R$ {preco}')
+        print('Deseja utilizar esta máquina?\nY/yes/y or N/no/n')
+        op = input()
+        if op == 'Y' or op == 'y' or op == 'yes':
+            usa(acesso=acesso, id=id, provedor=provedor)
+        else:
+            print('OK.')
+
     else:
         print('Nenhuma máquina foi encontrada')
 
 
-def usa():
-    provedor = input('Qual o provedor responsável pela máquina que deseja utilizar?\n> ')
-    id = input('Qual ID dá maquina que deseja utilizar?\n> ')
-
+def usa(acesso, id, provedor):
     try:
-        r = requests.post(url_provedor.format(
-            provedor=provedor, route='usar'), json={"id": id})
+        r = requests.post(acesso, json={"id": id})
 
         if r.status_code == 200:
             maquinas_em_uso.append((provedor, id))
-            print(f'A máquina com Provedor: {provedor} e ID: {id} está pronta para uso.\n')
+            print(
+                f'A máquina com Provedor: {provedor} e ID: {id} está pronta para uso.\n')
         else:
             print(r.json()['mensagem'])
     except:
@@ -63,7 +69,8 @@ def usa():
 def libera():
     global maquinas_em_uso
 
-    provedor = input('Qual o provedor responsável pela máquina que deseja liberar?\n> ')
+    provedor = input(
+        'Qual o provedor responsável pela máquina que deseja liberar?\n> ')
     id = input('Qual ID dá maquina que deseja liberar?\n> ')
 
     try:
@@ -71,8 +78,10 @@ def libera():
             provedor=provedor, route='liberar'), json={"id": id})
 
         if r.status_code == 200:
-            maquinas_em_uso = list(filter(lambda x: x[0] != provedor or x[1] != id, maquinas_em_uso))
-            print(f'A máquina com Provedor: {provedor} e ID: {id} foi liberada com sucesso.\n')
+            maquinas_em_uso = list(
+                filter(lambda x: x[0] != provedor and x[1] != id, maquinas_em_uso))
+            print(
+                f'A máquina com Provedor: {provedor} e ID: {id} foi liberada com sucesso.\n')
         else:
             print(r.json()['mensagem'])
     except:
@@ -82,7 +91,7 @@ def libera():
 
 def listar():
     print('Máquinas em uso:')
-    [ print(f'Provedor: {i[0]} - ID: {i[1]}') for i in maquinas_em_uso ]
+    [print(f'Provedor: {i[0]} - ID: {i[1]}') for i in maquinas_em_uso]
     print()
 
 
@@ -90,20 +99,20 @@ if __name__ == "__main__":
     while True:
         menu = 'Seleciona a opção desejada\n\n'
         menu += '[1] - Encontrar máquina:\n'
-        menu += '[2] - Utilizar máquina:\n'
-        menu += '[3] - Listar máquinas em uso\n'
-        menu += '[4] - Liberar máquina\n'
+        #menu += '[2] - Utilizar máquina:\n'
+        menu += '[2] - Listar máquinas em uso\n'
+        menu += '[3] - Liberar máquina\n'
         menu += '[0] - Sair\n'
 
         option = input(menu)
 
         if option == '1':
             procura()
+        # elif option == '2':
+        #     usa()
         elif option == '2':
-            usa()
-        elif option == '3':
             listar()
-        elif option == '4':
+        elif option == '3':
             libera()
         elif option == '0':
             sys.exit()

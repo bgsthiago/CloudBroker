@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # db config nuvem
 app.config['MONGO_DBNAME'] = 'heroku_ldzh9cl7'
-app.config['MONGO_URI'] = ''
+app.config['MONGO_URI'] = 'mongodb://heroku_ldzh9cl7:ut7hph7s95u3lq9qf019p1lol3@ds137263.mlab.com:37263/heroku_ldzh9cl7?retryWrites=false'
 
 # db config local
 # app.config['MONGO_DBNAME'] = 'cloudbroker'
@@ -60,15 +60,15 @@ def busca():
     mem = received_data['qtd_ram']
     disco = received_data['qtd_disco']
 
-    retorno = claudio.find({"$and": [{'qtd_vcpu': {"$gte": vcpu}}, {'qtd_ram': {"$gte": mem}},
-                                     {'qtd_disco': {"$gte": disco}}, {'em_uso': False}]}).sort('preco').limit(1)
-    print(type(retorno))
+    a = claudio.find({"$and": [{'qtd_vcpu': {"$gte": vcpu}}, {'qtd_ram': {"$gte": mem}},
+                               {'qtd_disco': {"$gte": disco}}, {'em_uso': False}]}).sort('preco').limit(1)
+    print(type(a))
     try:
         print('Foi Achado essa VM:\n')
-        print(retorno[0])
+        print(a[0])
 
-        resposta = {'provedor': retorno[0]['nome'], 'maquina': retorno[0]['id'], 'preco': retorno[0]['preco'],
-                    'qtd_vcpu': retorno[0]['qtd_vcpu'], 'qtd_ram': retorno[0]['qtd_ram'], 'qtd_disco': retorno[0]['qtd_disco']}
+        resposta = {'provedor': a[0]['nome'], 'maquina': a[0]['id'], 'preco': a[0]['preco'],
+                    'qtd_vcpu': a[0]['qtd_vcpu'], 'qtd_ram': a[0]['qtd_ram'], 'qtd_disco': a[0]['qtd_disco'], 'acesso': "http://localhost:{provedor}/usar".format(provedor=a[0]['nome'])}
     except:
         print('Nenhum Recurso com essas especificações foi encontrado')
         return jsonify({'Message': 'Error. Nao foi encontrado'}), 400
