@@ -60,15 +60,15 @@ def busca():
     mem = received_data['qtd_ram']
     disco = received_data['qtd_disco']
 
-    a = claudio.find({"$and": [{'qtd_vcpu': {"$gte": vcpu}}, {'qtd_ram': {"$gte": mem}},
-                               {'qtd_disco': {"$gte": disco}}, {'em_uso': False}]}).sort('preco').limit(1)
-    print(type(a))
+    retorno = claudio.find({"$and": [{'qtd_vcpu': {"$gte": vcpu}}, {'qtd_ram': {"$gte": mem}},
+                                     {'qtd_disco': {"$gte": disco}}, {'em_uso': False}]}).sort('preco').limit(1)
+    print(type(retorno))
     try:
         print('Foi Achado essa VM:\n')
-        print(a[0])
+        print(retorno[0])
 
-        resposta = {'provedor': a[0]['nome'], 'maquina': a[0]['id'], 'preco': a[0]['preco'],
-                    'qtd_vcpu': a[0]['qtd_vcpu'], 'qtd_ram': a[0]['qtd_ram'], 'qtd_disco': a[0]['qtd_disco']}
+        resposta = {'provedor': retorno[0]['nome'], 'maquina': retorno[0]['id'], 'preco': retorno[0]['preco'],
+                    'qtd_vcpu': retorno[0]['qtd_vcpu'], 'qtd_ram': retorno[0]['qtd_ram'], 'qtd_disco': retorno[0]['qtd_disco']}
     except:
         print('Nenhum Recurso com essas especificações foi encontrado')
         return jsonify({'Message': 'Error. Nao foi encontrado'}), 400
