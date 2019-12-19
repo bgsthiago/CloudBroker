@@ -71,7 +71,7 @@ def libera():
 
     provedor = input(
         'Qual o provedor responsável pela máquina que deseja liberar?\n> ')
-    id = input('Qual ID dá maquina que deseja liberar?\n> ')
+    id = int(input('Qual ID dá maquina que deseja liberar?\n> '))
 
     try:
         r = requests.post(url_provedor.format(
@@ -79,7 +79,7 @@ def libera():
 
         if r.status_code == 200:
             maquinas_em_uso = list(
-                filter(lambda x: x[0] != provedor and x[1] != id, maquinas_em_uso))
+                filter(lambda x: x[0] != provedor or x[1] != id, maquinas_em_uso))
             print(
                 f'A máquina com Provedor: {provedor} e ID: {id} foi liberada com sucesso.\n')
         else:
@@ -90,6 +90,7 @@ def libera():
 
 
 def listar():
+    global maquinas_em_uso
     print('Máquinas em uso:')
     [print(f'Provedor: {i[0]} - ID: {i[1]}') for i in maquinas_em_uso]
     print()
